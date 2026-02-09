@@ -10,7 +10,8 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import LoadingScreen from './components/LoadingScreen';
 import CustomCursor from './components/CustomCursor';
-import ScrollyCanvas from './components/ScrollyCanvas';
+
+
 
 /**
  * App Component
@@ -55,8 +56,7 @@ function App() {
                 {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
             </AnimatePresence>
 
-            {/* Background ScrollyCanvas loads parallel to the loading screen */}
-            <ScrollyCanvas />
+            {/* Background ScrollyCanvas removed for premium static black theme */}
 
             {/* Main Content Rendered after loading is complete */}
             {!isLoading && (

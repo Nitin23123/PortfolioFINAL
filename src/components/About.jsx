@@ -123,29 +123,29 @@ const About = () => {
             {/* Spotlight Overlay Layer */}
             <motion.div
                 className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-500"
-                style={{ background }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                style={{
+                    background: useMotionTemplate`radial-gradient(
+                        800px circle at ${smoothMouseX}px ${smoothMouseY}px,
+                        rgba(234, 88, 12, 0.04), // Orange-600
+                        transparent 80%
+                    )`
+                }}
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
                 {/* Intro / Bio Section */}
-                <div className="mb-32 text-center max-w-4xl mx-auto">
-
+                <div className="mb-40 text-center max-w-5xl mx-auto">
                     {/* Restored ScrollRevealWord Title */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="mb-12"
+                        transition={{ duration: 0.8 }}
+                        className="mb-16"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight flex justify-center flex-wrap gap-x-3 gap-y-1">
-                            {/* Anchor: "From" is always visible */}
-                            <span className="inline-block">From</span>
+                        <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter leading-tight flex justify-center flex-wrap gap-x-4 gap-y-2">
+                            <span className="inline-block text-white">From</span>
 
-                            {/* Animated Words triggered by scroll progress */}
                             {[
                                 { text: "Curiosity", range: [0.2, 0.3] },
                                 { text: "to", range: [0.35, 0.45] },
@@ -159,58 +159,60 @@ const About = () => {
                                 />
                             ))}
 
-                            {/* Anchor: "(Tech Stack)" is always visible */}
-                            <span className="inline-block text-gray-400 font-medium">(Tech Stack)</span>
+                            <span className="inline-block text-muted font-light px-2">(Tech Stack)</span>
                         </h2>
                     </motion.div>
-
                 </div>
 
                 {/* Timeline Items */}
-                <div id="tech-stack" className="space-y-24 pt-20">
+                <div id="tech-stack" className="space-y-32 pt-10">
                     {timelineData.map((phase, index) => (
                         <motion.div
                             key={index}
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true, margin: "-100px" }}
+                            viewport={{ once: true, margin: "-20%" }}
                             variants={{
                                 hidden: { opacity: 0, y: 50 },
                                 visible: {
                                     opacity: 1,
                                     y: 0,
-                                    transition: { duration: 0.8, staggerChildren: 0.2 }
+                                    transition: { duration: 0.8, ease: "easeOut" }
                                 }
                             }}
-                            className={`flex flex-col md:flex-row items-center justify-between gap-12 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                            className={`flex flex-col md:flex-row items-center justify-between gap-16 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                         >
                             {/* Text Content */}
                             <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'text-left md:text-right' : 'text-left'}`}>
-                                <h3 className="text-4xl font-bold text-white mb-2">{phase.year}</h3>
-                                <h4 className="text-2xl font-semibold text-purple-400 mb-4">{phase.title}</h4>
-                                <p className="text-gray-400 text-lg leading-relaxed">{phase.description}</p>
+                                <div className={`inline-block mb-4 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono font-bold tracking-widest uppercase`}>
+                                    {phase.year}
+                                </div>
+                                <h4 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">{phase.title}</h4>
+                                <p className="text-muted text-lg leading-relaxed">{phase.description}</p>
                             </div>
 
                             {/* Center Connector (Hidden on Mobile) */}
-                            <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-sm relative z-10">
-                                <div className="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+                            <div className="hidden md:flex items-center justify-center w-4 h-4 rounded-full bg-primary/20 relative z-10">
+                                <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_15px_rgba(0,220,183,0.8)]" />
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border border-white/5 rounded-full" />
                             </div>
 
                             {/* Skills Grid */}
-                            <div className="w-full md:w-5/12">
-                                <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-4 sm:gap-6 ${index % 2 === 0 ? 'justify-items-start' : 'justify-items-end'}`}>
+                            <div className="w-full md:w-5/12 glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors duration-500">
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <div className={`grid grid-cols-3 sm:grid-cols-4 gap-6 relative z-10 ${index % 2 === 0 ? 'justify-items-start' : 'justify-items-start'}`}>
                                     {phase.items.map((item, i) => (
                                         <MagneticWrapper key={i} strength={0.3}>
                                             <motion.div
-                                                className="flex flex-col items-center gap-4 group cursor-pointer"
-                                                variants={{
-                                                    hidden: { opacity: 0, scale: 0 },
-                                                    visible: { opacity: 1, scale: 1 }
-                                                }}
+                                                className="flex flex-col items-center gap-3 group/item cursor-pointer"
+                                                whileHover={{ y: -5 }}
                                             >
-                                                {/* RESTORED TECH CUBE */}
-                                                <TechCube icon={item.icon} color={item.color} />
-                                                <span className="text-xs font-medium text-gray-400 group-hover:text-white transition-colors duration-300">
+                                                <div className="p-3 bg-white/5 rounded-xl border border-white/5 group-hover/item:border-white/20 group-hover/item:bg-white/10 transition-all duration-300">
+                                                    <div className="text-2xl text-gray-400 group-hover/item:text-white transition-colors">
+                                                        {item.icon}
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] font-medium text-gray-500 group-hover/item:text-white transition-colors duration-300 uppercase tracking-wider">
                                                     {item.name}
                                                 </span>
                                             </motion.div>

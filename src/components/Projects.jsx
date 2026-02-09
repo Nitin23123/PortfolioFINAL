@@ -46,14 +46,17 @@ const Projects = () => {
         <section id="projects" className="py-32 bg-transparent text-white relative z-10" onMouseMove={handleMouseMove}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
-                <motion.h2
+                <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-6xl md:text-8xl font-bold mb-20 tracking-tighter"
+                    className="mb-24 flex items-end justify-between border-b border-white/10 pb-8"
                 >
-                    Selected Work
-                </motion.h2>
+                    <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
+                        Selected Work
+                    </h2>
+                    <span className="text-muted font-mono hidden md:block">(0{projects.length})</span>
+                </motion.div>
 
                 {/* Project List */}
                 <div className="flex flex-col" onMouseLeave={() => setHoveredProject(null)}>
@@ -68,18 +71,21 @@ const Projects = () => {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             onMouseEnter={() => window.matchMedia('(hover: hover)').matches && setHoveredProject(index)}
-                            className={`group border-t border-white/20 py-10 md:py-16 flex flex-col md:flex-row md:items-center justify-between transition-all duration-500 cursor-default md:cursor-none ${hoveredProject !== null && hoveredProject !== index ? 'opacity-20 blur-[2px]' : 'opacity-100'}`}
+                            className={`group border-b border-white/10 py-12 md:py-20 flex flex-col md:flex-row md:items-center justify-between transition-all duration-500 cursor-default md:cursor-none relative overflow-hidden`}
                         >
+                            {/* Hover Gradient Background */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
                             {/* Project Number & Title */}
-                            <div className="flex flex-col md:flex-row md:items-baseline md:gap-12 pointer-events-none">
-                                <span className="text-gray-500 text-sm font-mono mb-2 md:mb-0">0{index + 1}</span>
-                                <h3 className="text-4xl md:text-6xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500 ease-out">
+                            <div className="flex flex-col md:flex-row md:items-baseline md:gap-16 pointer-events-none z-10">
+                                <span className="text-muted/50 text-sm font-mono mb-4 md:mb-0">0{index + 1}</span>
+                                <h3 className="text-3xl md:text-5xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-300">
                                     {project.title}
                                 </h3>
                             </div>
 
                             {/* Project Meta & Arrow Icon */}
-                            <div className="flex items-center gap-12 mt-4 md:mt-0 pointer-events-none">
+                            <div className="flex items-center gap-12 mt-8 md:mt-0 pointer-events-none z-10">
                                 <div className="text-right hidden md:block overflow-hidden">
                                     <motion.div
                                         variants={{
@@ -88,47 +94,49 @@ const Projects = () => {
                                         }}
                                         className="relative transition-transform duration-500"
                                     >
-                                        <p className="text-base font-bold uppercase tracking-wider text-white">{project.category}</p>
-                                        <p className="text-gray-500 text-sm">{project.year}</p>
+                                        <p className="text-sm font-bold uppercase tracking-widest text-accent">{project.category}</p>
+                                        <p className="text-muted text-xs font-mono mt-1">{project.year}</p>
                                     </motion.div>
                                 </div>
                                 {/* Arrow rotates on hover */}
-                                <div className="relative w-12 h-12 flex items-center justify-center rounded-full border border-white/10 group-hover:bg-white group-hover:text-black transition-all duration-500">
-                                    <FaArrowRight className="text-xl transform -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                                <div className="relative w-14 h-14 flex items-center justify-center rounded-full border border-white/10 group-hover:border-white/30 group-hover:bg-white/5 transition-all duration-500 backdrop-blur-sm">
+                                    <FaArrowRight className="text-xl text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
                             </div>
                         </motion.a>
                     ))}
-                    <div className="border-t border-white/20" />
                 </div>
             </div>
 
             {/* Floating Image Reveal - Fixed to viewport to follow mouse globally within section */}
             <motion.div
-                className="fixed top-0 left-0 pointer-events-none z-50 hidden md:block overflow-hidden rounded-lg bg-gray-800"
+                className="fixed top-0 left-0 pointer-events-none z-50 hidden md:block overflow-hidden rounded-xl glass-panel shadow-2xl"
                 style={{
-                    width: 300,
-                    height: 200,
+                    width: 400,
+                    height: 250,
                     x: mouseX,
                     y: mouseY,
                 }}
-                initial={{ opacity: 0, scale: 0.5 }}
+                initial={{ opacity: 0, scale: 0.8 }}
                 animate={{
                     opacity: hoveredProject !== null ? 1 : 0,
-                    scale: hoveredProject !== null ? 1 : 0.5,
+                    scale: hoveredProject !== null ? 1 : 0.8,
                 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                transition={{ type: "spring", stiffness: 150, damping: 20 }}
             >
-                {/* Placeholder for project image - swap logic when images exist */}
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-black text-white/50 font-mono text-sm overflow-hidden">
+                {/* Floating Image */}
+                <div className="w-full h-full relative">
+                    <div className="absolute inset-0 bg-black/20 z-10" /> {/* Overlay for contrast */}
                     {hoveredProject !== null && projects[hoveredProject] && projects[hoveredProject].image ? (
                         <img
                             src={projects[hoveredProject].image}
                             alt={projects[hoveredProject].title}
-                            className="w-full h-full object-cover opacity-90"
+                            className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
                         />
                     ) : (
-                        <span className="p-4 text-center">{hoveredProject !== null ? "View Project" : ""}</span>
+                        <div className="w-full h-full flex items-center justify-center bg-secondary text-muted">
+                            <span className="font-mono text-xs uppercase tracking-widest">Preview Unavailable</span>
+                        </div>
                     )}
                 </div>
             </motion.div>

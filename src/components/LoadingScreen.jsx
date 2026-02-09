@@ -14,113 +14,53 @@ import { motion, AnimatePresence } from 'framer-motion';
  * @param {Function} props.onComplete - Callback function when loading finishes
  */
 const LoadingScreen = ({ onComplete }) => {
-    const [count, setCount] = useState(0);
-    const [textIndex, setTextIndex] = useState(0);
+    const [progress, setProgress] = useState(0);
 
-    // Messages displayed sequentially during loading
-    const loadingTexts = [
-        "Compiling creativity…",
-        "Building components…",
-        "Loading React mindset…",
-        "Rendering UI…",
-        "Optimizing performance…",
-        "Deploying portfolio…"
-    ];
-
-    // Counter logic: Increments from 0 to 100 with random steps (simulates network traffic/processing)
+    // Counter logic: Increments from 0 to 100
     useEffect(() => {
         const interval = setInterval(() => {
-            setCount((prev) => {
-                if (prev === 100) {
+            setProgress((prev) => {
+                if (prev >= 100) {
                     clearInterval(interval);
-                    setTimeout(onComplete, 800); // Small delay before unmounting
+                    setTimeout(onComplete, 600); // Slight delay for smoothness
                     return 100;
                 }
-                const increment = Math.floor(Math.random() * 10) + 1; // Random increment 1-10%
+                const increment = Math.floor(Math.random() * 5) + 2;
                 return Math.min(prev + increment, 100);
             });
-        }, 150);
+        }, 100);
 
         return () => clearInterval(interval);
     }, [onComplete]);
 
-    // Update loading text based on progress
-    useEffect(() => {
-        const index = Math.min(Math.floor(count / 18), 5); // Switch text roughly every 18%
-        setTextIndex(index);
-    }, [count]);
-
     return (
         <motion.div
-            className="fixed inset-0 z-[9999] bg-black flex flex-col justify-between p-6 md:p-12 text-white font-sans overflow-hidden"
-            initial={{ y: 0 }}
-            exit={{ y: "-100%", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }} // Curtain lift exit animation
+            className="fixed inset-0 z-[9999] bg-black flex items-center justify-center font-sans"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeInOut" } }}
         >
-            {/* Top Left: Loading Indicator */}
-            <div className="flex items-start">
-                <span className="text-xs md:text-sm font-bold tracking-widest uppercase">
-                    LOADING
-                </span>
-            </div>
-
-            {/* Center: Console Log Message Animation */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center px-4">
+            <div className="w-[200px] md:w-[300px] flex flex-col items-center gap-4">
+                {/* Brand / Loading Text (Minimal) */}
                 <motion.div
-                    className="inline-block text-sm sm:text-lg md:text-2xl font-mono text-white relative px-2 md:px-4 py-2"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    whileHover={{ scale: 1.05, textShadow: "0 0 8px rgba(255,255,255,0.5)" }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="text-white/50 text-xs font-mono tracking-[0.3em] uppercase"
                 >
-                    {/* Typewriter effect container */}
-                    <motion.div
-                        className="overflow-hidden whitespace-nowrap align-bottom inline-block"
-                        initial={{ width: 0 }}
-                        animate={{ width: "auto" }}
-                        transition={{ duration: 2, ease: "linear", delay: 0.2 }}
-                    >
-                        <span className="text-white">console</span>.<span className="text-white">log</span>
-                        <span className="text-white">(</span>
-                        <span className="text-white">"Welcome to my portfolio"</span>
-                        <span className="text-white">);</span>
-                    </motion.div>
-
-                    {/* Blinking Cursor */}
-                    <motion.span
-                        animate={{ opacity: [0, 1, 0] }}
-                        transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                        className="inline-block w-2 h-6 md:h-8 bg-white ml-1 translate-y-1"
-                    />
+                    Loading
                 </motion.div>
-            </div>
 
-            {/* Bottom Section */}
-            <div className="flex justify-between items-end w-full">
-
-                {/* Bottom Left: Dynamic Loading Text */}
-                <div className="text-lg md:text-2xl font-light text-white font-mono mb-2 md:mb-4 min-w-[300px]">
-                    <motion.span
-                        key={textIndex}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="inline-block"
-                    >
-                        {loadingTexts[textIndex]}
-                    </motion.span>
+                {/* Progress Bar Container */}
+                <div className="w-full h-[1px] bg-white/10 rounded-full overflow-hidden relative">
+                    {/* Progress Bar Fill */}
+                    <motion.div
+                        className="h-full bg-primary absolute left-0 top-0"
+                        initial={{ width: "0%" }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ ease: "linear", duration: 0.1 }}
+                    />
                 </div>
-
-
-                {/* Bottom Right: Percentage Counter */}
-                <h1 className="text-[15vw] md:text-[10vw] leading-[0.8] font-black tracking-tighter">
-                    {count}%
-                </h1>
             </div>
-
-            {/* Background Line Decoration */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-white/5 -z-10" />
-
         </motion.div>
     );
 };

@@ -125,23 +125,23 @@ const ParallaxCard = ({ data, index }) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
-                top: "100px",
+                top: "0px", // Reset top offset for cleaner layout
                 transformStyle: "preserve-3d",
                 rotateX,
                 rotateY,
             }}
-            className="relative group w-full perspective-1000"
+            className="relative group w-full perspective-1000 mb-20" // added margin bottom for spacing
         >
             {/* Background Layer (Deepest) */}
             <div
                 style={{ transform: "translateZ(0px)" }}
-                className="absolute inset-0 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl transition-all duration-300 group-hover:border-white/30"
+                className="absolute inset-0 glass-panel rounded-3xl"
             />
 
             {/* Glow/Sheen Effect */}
             <div
                 style={{ transform: "translateZ(20px)" }}
-                className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
             />
 
             {/* Content Layer (Floats above background) */}
@@ -150,8 +150,8 @@ const ParallaxCard = ({ data, index }) => {
 
                     {/* Floating Date Tag */}
                     <div className="md:w-auto">
-                        <div style={{ transform: "translateZ(30px)" }} className="inline-block px-4 py-2 border border-white/20 bg-black/50 backdrop-blur-md rounded-lg mx-auto md:mx-0 shadow-lg">
-                            <span className="font-mono text-sm tracking-widest text-white/90 font-bold">{data.period}</span>
+                        <div style={{ transform: "translateZ(30px)" }} className="inline-block px-4 py-2 border border-white/10 bg-black/40 backdrop-blur-md rounded-lg mx-auto md:mx-0 shadow-lg">
+                            <span className="font-mono text-sm tracking-widest text-accent font-bold uppercase">{data.period}</span>
                         </div>
                     </div>
 
@@ -161,19 +161,22 @@ const ParallaxCard = ({ data, index }) => {
                             <h3 style={{ transform: "translateZ(20px)" }} className="text-4xl font-black text-white mb-2 uppercase tracking-tighter mix-blend-overlay group-hover:mix-blend-normal transition-all">
                                 {data.company}
                             </h3>
-                            <p style={{ transform: "translateZ(15px)" }} className="text-xl text-gray-400 font-mono tracking-wide">
+                            <p style={{ transform: "translateZ(15px)" }} className="text-xl text-primary font-mono tracking-wide">
                                 {data.role}
                             </p>
                         </div>
 
-                        <p className="text-gray-300 leading-relaxed font-light text-lg">
+                        <p className="text-muted leading-relaxed font-light text-lg">
                             {data.description}
                         </p>
 
                         {/* Tech Stack Bubbles */}
                         <div style={{ transform: "translateZ(25px)" }} className="flex flex-wrap gap-2">
                             {data.tech.map((tech, i) => (
-                                <span key={i} className="px-4 py-2 rounded-full text-xs font-bold text-black bg-white/80 backdrop-blur-sm border border-transparent hover:scale-110 transition-transform cursor-crosshair">
+                                <span
+                                    key={i}
+                                    className="px-3 py-1 text-xs font-mono border border-white/10 rounded-full text-muted hover:border-primary/50 hover:text-primary transition-colors duration-300"
+                                >
                                     {tech}
                                 </span>
                             ))}
@@ -184,7 +187,7 @@ const ParallaxCard = ({ data, index }) => {
                             {data.mainUrl && (
                                 <MagneticWrapper strength={0.2}>
                                     <a href={data.mainUrl} target="_blank" rel="noopener noreferrer"
-                                        className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-xl shadow-lg hover:shadow-white/20">
+                                        className="px-6 py-3 bg-white text-black font-bold uppercase tracking-wider hover:bg-accent hover:text-black transition-colors rounded-lg shadow-lg hover:shadow-accent/20 text-sm">
                                         Launch Project
                                     </a>
                                 </MagneticWrapper>
@@ -192,7 +195,7 @@ const ParallaxCard = ({ data, index }) => {
                             {data.demoUrl && (
                                 <MagneticWrapper strength={0.2}>
                                     <a href={data.demoUrl} target="_blank" rel="noopener noreferrer"
-                                        className="px-8 py-4 border border-white/50 text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all rounded-xl backdrop-blur-sm">
+                                        className="px-6 py-3 border border-white/20 text-white font-bold uppercase tracking-wider hover:bg-white/10 transition-all rounded-lg backdrop-blur-sm text-sm">
                                         Demo
                                     </a>
                                 </MagneticWrapper>
