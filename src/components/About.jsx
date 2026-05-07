@@ -108,8 +108,9 @@ const About = () => {
                         <p className="text-sm text-white/50">Full work history, skills & education in one place.</p>
                     </div>
                     <a
-                        href="/resume.pdf"
-                        download
+                        href="https://drive.google.com/file/d/1SKNp_swpBewvlq-emlsK06fQ4_lPWP_Q/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="group flex items-center gap-3 px-6 py-3 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-primary/40 active:scale-95 transition-all duration-300"
                     >
                         <span className="text-xs font-mono text-white/50 group-hover:text-white tracking-widest uppercase transition-colors duration-300">Download CV</span>
