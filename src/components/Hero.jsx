@@ -173,7 +173,7 @@ const Hero = () => {
                 className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
             >
                 <a
-                    href="https://drive.google.com/file/d/1SKNp_swpBewvlq-emlsK06fQ4_lPWP_Q/view?usp=sharing"
+                    href="https://drive.google.com/file/d/1yHU8HvPrOW0-2AGfFsen8m5jeQWBJR0y/view"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.09] hover:border-white/30 transition-all duration-300"

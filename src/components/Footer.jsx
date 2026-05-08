@@ -16,7 +16,7 @@ const Footer = () => {
                     <h2 className="text-2xl font-bold tracking-tight mb-2 text-white">NITIN TANWAR</h2>
                     <p className="text-muted text-sm">© {new Date().getFullYear()} All rights reserved.</p>
                     <a
-                        href="https://drive.google.com/file/d/1SKNp_swpBewvlq-emlsK06fQ4_lPWP_Q/view?usp=sharing"
+                        href="https://drive.google.com/file/d/1yHU8HvPrOW0-2AGfFsen8m5jeQWBJR0y/view"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 active:scale-95 transition-all duration-300"
