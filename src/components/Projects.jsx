@@ -1,11 +1,11 @@
 import { motion, useSpring } from 'framer-motion';
 import { useState } from 'react';
-import { FaArrowRight } from 'react-icons/fa';
 
-// Data for selected works
+// Selected works — one poetic line each, noth.in style
 const projects = [
     {
         title: "ReconPro",
+        line: "Recon without the grunt work.",
         category: "SaaS Landing + Auth API",
         year: "2026",
         link: "https://reconpro.info",
@@ -13,6 +13,7 @@ const projects = [
     },
     {
         title: "DevTrace",
+        line: "A dev's day, traced end to end.",
         category: "Developer Productivity Dashboard",
         year: "2025",
         link: "https://devtracedash.netlify.app",
@@ -20,116 +21,110 @@ const projects = [
     },
 ];
 
-/**
- * Projects Component
- * 
- * Displays a list of selected works with a minimal, interactive design.
- * Features hover animations that shift text and rotate the arrow icon.
- */
 const Projects = () => {
     const [hoveredProject, setHoveredProject] = useState(null);
 
-    // Spring physics for smooth mouse following
+    // Spring physics for the floating preview + cursor chip
     const springConfig = { stiffness: 150, damping: 15, mass: 0.1 };
     const mouseX = useSpring(0, springConfig);
     const mouseY = useSpring(0, springConfig);
 
     const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        mouseX.set(clientX - 150); // Center offset
-        mouseY.set(clientY - 100); // Center offset
+        mouseX.set(e.clientX - 190);
+        mouseY.set(e.clientY - 120);
     };
 
     return (
-        <section id="projects" className="py-16 md:py-32 bg-transparent text-white relative z-10" onMouseMove={handleMouseMove}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+        <section id="projects" className="bg-ink text-paper py-24 md:py-40 relative z-10" onMouseMove={handleMouseMove}>
+            <div className="max-w-[1920px] mx-auto px-6 md:px-12">
+
+                {/* Section index — sticky, rides the scroll */}
+                <motion.p
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mb-24 flex items-end justify-between border-b border-white/10 pb-8"
+                    transition={{ duration: 0.6 }}
+                    className="label-dark sticky top-8 z-20 mb-16 md:mb-24 flex items-center justify-between"
                 >
-                    <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
-                        Selected Work
-                    </h2>
-                    <span className="text-muted font-mono hidden md:block">(0{projects.length})</span>
-                </motion.div>
+                    <span>( 03 ) — Works</span>
+                    <span className="hidden md:block">Good brands ship. Great ones surprise.</span>
+                </motion.p>
 
-                {/* Project List */}
+                {/* Works list */}
                 <div className="flex flex-col" onMouseLeave={() => setHoveredProject(null)}>
                     {projects.map((project, index) => (
                         <motion.a
-                            key={index}
+                            key={project.title}
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            whileTap={{ scale: 0.98, backgroundColor: 'rgba(255,255,255,0.03)' }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             onMouseEnter={() => window.matchMedia('(hover: hover)').matches && setHoveredProject(index)}
-                            className={`group border-b border-white/10 py-12 md:py-20 flex flex-col md:flex-row md:items-center justify-between transition-all duration-500 cursor-default md:cursor-none relative overflow-hidden`}
+                            className={`group border-t border-white/15 py-12 md:py-20 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] md:items-baseline gap-4 md:gap-16 transition-opacity duration-500
+                                ${hoveredProject !== null && hoveredProject !== index ? 'opacity-30' : 'opacity-100'}`}
                         >
-                            {/* Hover Gradient Background */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                            {/* Index */}
+                            <span className="label-dark">( 0{index + 1} )</span>
 
-                            {/* Project Number & Title */}
-                            <div className="flex flex-col md:flex-row md:items-baseline md:gap-16 pointer-events-none z-10">
-                                <span className="text-muted/50 text-sm font-mono mb-4 md:mb-0">0{index + 1}</span>
-                                <h3 className="text-3xl md:text-5xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-300">
+                            {/* Title + poetic line */}
+                            <div>
+                                <h3 className="text-4xl md:text-7xl font-bold tracking-display uppercase leading-none">
                                     {project.title}
                                 </h3>
+                                <p className="text-paper/70 text-base md:text-xl mt-3 md:mt-4">
+                                    {project.line}
+                                </p>
                             </div>
 
-                            {/* Project Meta & Arrow Icon */}
-                            <div className="flex items-center justify-between md:justify-end gap-6 md:gap-12 mt-6 md:mt-0 pointer-events-none z-10">
-                                <div className="md:text-right overflow-hidden">
-                                    <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-accent">{project.category}</p>
-                                    <p className="text-muted text-xs font-mono mt-1">{project.year}</p>
-                                </div>
-                                {/* Arrow rotates on hover */}
-                                <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full border border-white/10 group-hover:border-white/30 group-hover:bg-white/5 transition-all duration-500 backdrop-blur-sm shrink-0">
-                                    <FaArrowRight className="text-lg md:text-xl text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-                                </div>
+                            {/* Meta */}
+                            <div className="md:text-right">
+                                <p className="label-dark">{project.category}</p>
+                                <p className="label-dark mt-1">© {project.year.slice(2)}</p>
+                                <p className="label-dark mt-3 md:hidden underline underline-offset-4">explore ↗</p>
                             </div>
                         </motion.a>
                     ))}
+                    <div className="border-t border-white/15" />
                 </div>
+
+                {/* Section footer meta */}
+                <p className="label-dark mt-10 flex items-center justify-between">
+                    <span>( 0{projects.length} )</span>
+                    <span>© 25 . 26</span>
+                </p>
             </div>
 
-            {/* Floating Image Reveal - Fixed to viewport to follow mouse globally within section */}
+            {/* Floating preview + cursor chip — desktop only */}
             <motion.div
-                className="fixed top-0 left-0 pointer-events-none z-50 hidden md:block overflow-hidden rounded-xl glass-panel shadow-2xl"
-                style={{
-                    width: 400,
-                    height: 250,
-                    x: mouseX,
-                    y: mouseY,
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
+                className="fixed top-0 left-0 pointer-events-none z-50 hidden md:block"
+                style={{ x: mouseX, y: mouseY }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{
                     opacity: hoveredProject !== null ? 1 : 0,
-                    scale: hoveredProject !== null ? 1 : 0.8,
+                    scale: hoveredProject !== null ? 1 : 0.9,
                 }}
                 transition={{ type: "spring", stiffness: 150, damping: 20 }}
             >
-                {/* Floating Image */}
-                <div className="w-full h-full relative">
-                    <div className="absolute inset-0 bg-black/20 z-10" /> {/* Overlay for contrast */}
-                    {hoveredProject !== null && projects[hoveredProject] && projects[hoveredProject].image ? (
+                <div className="w-[380px] h-[240px] overflow-hidden rounded-sm">
+                    {hoveredProject !== null && projects[hoveredProject]?.image ? (
                         <img
                             src={projects[hoveredProject].image}
-                            alt={projects[hoveredProject].title}
-                            className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
+                            alt=""
+                            className="w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-secondary text-muted">
-                            <span className="font-mono text-xs uppercase tracking-widest">Preview Unavailable</span>
+                        <div className="w-full h-full flex items-center justify-center bg-greige">
+                            <span className="label-light">Preview unavailable</span>
                         </div>
                     )}
                 </div>
+                {/* the "explore" chip, riding just below the preview */}
+                <span className="cursor-chip absolute -bottom-3 left-4">
+                    explore <span aria-hidden="true">↗</span>
+                </span>
             </motion.div>
         </section>
     );

@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FiMail, FiArrowUpRight } from 'react-icons/fi';
 
 const Contact = () => {
     const [copied, setCopied] = useState(false);
@@ -12,72 +11,53 @@ const Contact = () => {
     };
 
     return (
-        <section id="contact" className="py-16 md:py-48 bg-transparent text-white relative overflow-hidden">
+        <section id="contact" className="bg-ink text-paper pt-24 md:pt-40 pb-16 md:pb-24 relative overflow-hidden">
+            <div className="max-w-[1920px] mx-auto px-6 md:px-12">
 
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-primary/[0.04] rounded-full blur-[140px] pointer-events-none" />
-
-            <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+                {/* Section index */}
+                <motion.p
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.6 }}
+                    className="label-dark mb-16 md:mb-24 flex items-center justify-between"
                 >
-                    <p className="text-accent font-mono font-bold tracking-[0.2em] uppercase mb-6">What's Next?</p>
-                    <h2 className="text-6xl sm:text-7xl md:text-9xl font-black mb-16 tracking-tighter text-white leading-[0.9]">
-                        LET'S WORK<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">TOGETHER</span>
+                    <span>( 05 ) — Contact</span>
+                    <span className="hidden md:block flex-none">Ready when you are</span>
+                </motion.p>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                >
+                    {/* Big type */}
+                    <h2 className="type-display text-display text-balance">
+                        Let&rsquo;s make<br />Everythin&rsquo;<br />together
                     </h2>
 
-                    {/* Email Card */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2, duration: 0.6 }}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
-                    >
-                        {/* Mail link */}
-                        <a
-                            href="mailto:nitin23123@gmail.com"
-                            className="group flex items-center gap-3 px-6 py-4 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 active:scale-95 active:bg-white/10 transition-all duration-300"
-                        >
-                            <FiMail className="text-accent text-lg shrink-0" />
-                            <span className="font-mono text-sm md:text-base text-white/70 group-hover:text-white transition-colors duration-300 tracking-wide">
-                                nitin23123@gmail.com
-                            </span>
-                            <FiArrowUpRight className="text-white/30 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 text-sm" />
+                    {/* Actions */}
+                    <div className="mt-14 md:mt-20 flex flex-col sm:flex-row sm:items-center gap-4">
+                        <a href="mailto:nitin23123@gmail.com" className="btn-pill-dark">
+                            drop me an email <span aria-hidden="true">@</span>
                         </a>
-
-                        {/* Copy button */}
-                        <motion.button
+                        <button
                             onClick={handleCopy}
-                            whileTap={{ scale: 0.94 }}
-                            className="px-5 py-4 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 active:scale-95 active:bg-white/10 transition-all duration-300 font-mono text-xs tracking-widest text-white/40 hover:text-white/80 uppercase min-w-[90px]"
+                            className="btn-pill-dark min-w-[120px] justify-center"
+                            aria-live="polite"
                         >
-                            {copied ? '✓ Copied' : 'Copy'}
-                        </motion.button>
-                    </motion.div>
-
-                    {/* CTA Button */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.35, duration: 0.6 }}
-                    >
+                            {copied ? '✓ copied' : 'copy email'}
+                        </button>
                         <a
                             href="https://www.linkedin.com/in/nitin-tanwar-535018303/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 overflow-hidden font-bold text-white rounded-full bg-white/5 border border-white/10 hover:border-white/30 active:scale-95 transition-all duration-300"
+                            className="btn-pill-dark"
                         >
-                            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-primary rounded-full group-hover:w-96 group-hover:h-96 opacity-20" />
-                            <span className="relative text-lg md:text-xl tracking-wider uppercase">Say Hello on LinkedIn</span>
-                            <FiArrowUpRight className="relative text-xl group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                            linkedin <span aria-hidden="true">↗</span>
                         </a>
-                    </motion.div>
+                    </div>
                 </motion.div>
             </div>
         </section>

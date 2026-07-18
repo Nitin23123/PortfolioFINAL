@@ -4,6 +4,8 @@
 @import "@fontsource/inter/700.css";
 @import "@fontsource/inter/800.css";
 @import "@fontsource/inter/900.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
 
 @tailwind base;
 @tailwind components;
@@ -15,33 +17,81 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-white overflow-x-hidden;
+    @apply bg-paper text-ink font-medium antialiased selection:bg-ink selection:text-paper overflow-x-hidden;
     -webkit-tap-highlight-color: transparent;
   }
 
-  * {
-    outline: none;
+  ::selection {
+    background: #000;
+    color: #fff;
+  }
+
+  /* keyboard focus stays visible — accessibility over aesthetics */
+  :focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+
+  /* ---- mono metadata layer: uppercase, small, tracked, gray ---- */
+  .label-mono {
+    @apply font-mono text-label uppercase;
+  }
+
+  .label-light {
+    @apply label-mono text-meta;        /* on white sections */
+  }
+
+  .label-dark {
+    @apply label-mono text-meta-dark;   /* on black sections */
+  }
+
+  /* sticky section index that inverts crossing black/white boundaries */
+  .section-index {
+    @apply label-mono text-paper mix-blend-difference sticky top-8 z-10;
+  }
+
+  /* ---- pill button: hairline border, only the border animates ---- */
+  .btn-pill {
+    @apply inline-flex items-center gap-3 rounded-pill font-mono text-xs uppercase tracking-[0.08em]
+           px-6 py-3.5 whitespace-nowrap transition-colors duration-300 ease-out-expo;
+  }
+
+  .btn-pill-dark {
+    @apply btn-pill bg-ink text-paper border border-white/40 hover:border-white;
+  }
+
+  .btn-pill-light {
+    @apply btn-pill bg-paper text-ink border border-black/30 hover:border-black;
+  }
+
+  /* cursor chip that follows the pointer over project rows */
+  .cursor-chip {
+    @apply font-mono text-[11px] uppercase tracking-[0.03em] bg-paper text-ink
+           rounded-pill px-3 py-1 inline-flex items-center gap-1.5;
   }
 }
 
 @layer utilities {
-  .glass-panel {
-    background-color: rgba(10, 10, 10, 0.5);
-    /* surface/50 */
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
-  }
-
-  .text-gradient {
-    background: linear-gradient(to right, #EA580C, #F97316);
-    /* primary to accent */
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
   .tracking-tightest {
     letter-spacing: -0.05em;
+  }
+
+  /* display type: near-solid line-height, tight tracking */
+  .type-display {
+    @apply font-sans font-bold leading-[0.9] tracking-display uppercase;
   }
 }

@@ -1,82 +1,101 @@
-import Lenis from 'lenis';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import TechStack from './components/TechStack';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import LoadingScreen from './components/LoadingScreen';
-import CustomCursor from './components/CustomCursor';
-import TargetCursor from './components/TargetCursor';
 
+import Providers, { useCapabilities, markLoaderSeen } from './app/providers';
+import { useExperience, experienceActions } from './state/experienceStore';
+import { SCENES } from './scenes/registry';
 
+import S00Loader from './scenes/S00Loader/S00Loader';
+import Intermission from './scenes/Intermission/Intermission';
+import S01Hero from './scenes/S01Hero/S01Hero';
+import S02Evidence from './scenes/S02Evidence/S02Evidence';
+import S03Author from './scenes/S03Author/S03Author';
+import S04Invitation from './scenes/S04Invitation/S04Invitation';
+import S05Credits from './scenes/S05Credits/S05Credits';
 
 /**
- * App Component
- * 
- * The root component that orchestrates the entire application.
- * Manages the initial loading state and renders the main application structure.
- * Uses a custom cursor and a single-page scroll layout.
+ * Tracks which registry scene occupies the frame and writes it to the
+ * store (~once per scene change — well under the 1Hz state budget).
+ * The Intermission reads it to mark the current plate.
  */
-function App() {
-    // State to track if the initial loading sequence is active
-    const [isLoading, setIsLoading] = useState(true);
+const useActiveSceneTracking = (enabled) => {
+    useEffect(() => {
+        if (!enabled) return undefined;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) experienceActions.setActiveScene(entry.target.id);
+                });
+            },
+            { threshold: 0.25 },
+        );
+
+        SCENES.forEach(({ id }) => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+        return () => observer.disconnect();
+    }, [enabled]);
+};
+
+/**
+ * The film. Scene 00 gates it once per session; the Intermission
+ * floats above every frame; the reels run in registry order.
+ */
+const Film = () => {
+    const phase = useExperience((s) => s.phase);
+    const { loaderSeen, reducedMotion } = useCapabilities();
+    const skipLoader = loaderSeen || reducedMotion;
 
     useEffect(() => {
-        // Initialize Lenis for smooth scrolling
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
+        if (skipLoader) experienceActions.ready();
+    }, [skipLoader]);
 
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-
-        requestAnimationFrame(raf);
-
+    // The page holds still while the count runs.
+    useEffect(() => {
+        if (phase === 'ready') return undefined;
+        const { documentElement } = document;
+        const previous = documentElement.style.overflow;
+        documentElement.style.overflow = 'hidden';
         return () => {
-            lenis.destroy();
+            documentElement.style.overflow = previous;
         };
-    }, []);
+    }, [phase]);
+
+    useActiveSceneTracking(phase === 'ready');
+
+    const handleLoaderComplete = () => {
+        markLoaderSeen();
+        experienceActions.ready();
+    };
 
     return (
-        <div className="bg-transparent min-h-screen text-black font-sans selection:bg-black selection:text-white md:cursor-none">
-            {/* AnimatePresence handles the exit animation of the loading screen */}
-            <AnimatePresence mode="wait">
-                {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+        <div className="bg-paper min-h-screen text-ink font-sans">
+            <AnimatePresence>
+                {phase === 'loading' && !skipLoader && (
+                    <S00Loader key="s00" onComplete={handleLoaderComplete} />
+                )}
             </AnimatePresence>
 
-            {/* Background ScrollyCanvas removed for premium static black theme */}
-
-            {/* Main Content Rendered after loading is complete */}
-            {!isLoading && (
+            {phase === 'ready' && (
                 <>
-                    <CustomCursor />
-                    <TargetCursor targetSelector=".cursor-target" />
-                    <Navbar />
-                    <Hero />
-                    <About />
-                    <Experience />
-                    <Projects />
-                    <TechStack />
-                    <Contact />
-                    <Footer />
+                    <Intermission />
+                    <S01Hero />
+                    <S02Evidence />
+                    <S03Author />
+                    <S04Invitation />
+                    <S05Credits />
                 </>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default App
+const App = () => (
+    <Providers>
+        <Film />
+    </Providers>
+);
+
+export default App;

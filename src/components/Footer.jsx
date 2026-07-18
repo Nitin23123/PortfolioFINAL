@@ -1,38 +1,34 @@
 /**
- * Footer Component
- * 
- * Simple black footer with copyright, social links, and email.
+ * Footer — mono metadata credits, continues the black contact block.
  */
 const Footer = () => {
     return (
-        <footer className="bg-black py-12 md:py-20 relative overflow-hidden border-t border-white/10">
+        <footer className="bg-ink text-paper pb-10">
+            <div className="max-w-[1920px] mx-auto px-6 md:px-12">
+                <div className="border-t border-white/15 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
 
-            {/* Ambient Background */}
-            <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+                    {/* Credits */}
+                    <p className="label-dark">
+                        ©{new Date().getFullYear()} — Nitin Tanwar
+                    </p>
 
-            <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center relative z-10">
-                {/* Copyright Section */}
-                <div className="mb-8 md:mb-0 text-center md:text-left">
-                    <h2 className="text-2xl font-bold tracking-tight mb-2 text-white">NITIN TANWAR</h2>
-                    <p className="text-muted text-sm">© {new Date().getFullYear()} All rights reserved.</p>
-                    <a
-                        href="https://drive.google.com/file/d/1yHU8HvPrOW0-2AGfFsen8m5jeQWBJR0y/view"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 active:scale-95 transition-all duration-300"
-                    >
-                        <span className="text-xs font-mono text-white/40 group-hover:text-white tracking-widest uppercase transition-colors duration-300">Resume</span>
-                        <svg className="w-3 h-3 text-white/20 group-hover:text-accent group-hover:translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </a>
-                </div>
+                    {/* Links */}
+                    <nav className="flex items-center gap-6" aria-label="Footer">
+                        <a href="mailto:nitin23123@gmail.com"
+                            className="label-dark hover:text-paper transition-colors duration-300">Email</a>
+                        <a href="https://www.linkedin.com/in/nitin-tanwar-535018303/" target="_blank" rel="noopener noreferrer"
+                            className="label-dark hover:text-paper transition-colors duration-300">LinkedIn</a>
+                        <a href="https://github.com/Nitin23123" target="_blank" rel="noopener noreferrer"
+                            className="label-dark hover:text-paper transition-colors duration-300">GitHub</a>
+                        <a href="https://drive.google.com/file/d/1yHU8HvPrOW0-2AGfFsen8m5jeQWBJR0y/view" target="_blank" rel="noopener noreferrer"
+                            className="label-dark hover:text-paper transition-colors duration-300">Resume</a>
+                    </nav>
 
-                {/* Social Links */}
-                <div className="flex gap-5 sm:gap-8">
-                    <a href="mailto:nitin23123@gmail.com" className="text-muted hover:text-white transition-colors text-sm uppercase tracking-wider font-medium">Email</a>
-                    <a href="https://www.linkedin.com/in/nitin-tanwar-535018303/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-white transition-colors text-sm uppercase tracking-wider font-medium">LinkedIn</a>
-                    <a href="https://github.com/Nitin23123" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-white transition-colors text-sm uppercase tracking-wider font-medium">GitHub</a>
+                    {/* Status */}
+                    <p className="label-dark flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-go" aria-hidden="true" />
+                        available for work
+                    </p>
                 </div>
             </div>
         </footer>

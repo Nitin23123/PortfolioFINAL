@@ -7,47 +7,40 @@ export default {
     theme: {
         extend: {
             colors: {
-                background: '#000000', // True Black
-                surface: '#0A0A0A',    // Very dark grey for cards
-                foreground: '#EDEDED', // Off-white for text
-                primary: '#EA580C',    // Muted Orange (Tailwind Orange-600) for actions
-                secondary: '#18181B',  // Zinc-950 for deeper surfaces
-                accent: '#F97316',     // Orange-500 for highlights
-                muted: '#A1A1AA',      // Zinc-400
-                'glass-stroke': 'rgba(255, 255, 255, 0.08)',
+                // noth.in monochrome system
+                ink: '#000000',        // pure black — dark sections, text on light
+                paper: '#FFFFFF',      // pure white — light sections, text on dark
+                greige: '#E3E1DE',     // warm gray — secondary surface
+                go: '#0BA954',         // THE only color: availability dot
+
+                // metadata grays (AA-safe per background)
+                meta: '#6B6B6B',       // mono labels on white (≥4.5:1)
+                'meta-dark': '#8E8E8E', // mono labels on black (≥5:1)
+
+                // legacy aliases kept so untouched utilities don't break
+                background: '#FFFFFF',
+                foreground: '#000000',
+                muted: '#6B6B6B',
             },
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
+                sans: ['Inter', 'Arial', 'sans-serif'],
+                mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
             },
-            backgroundImage: {
-                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                'hero-glow': 'conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)',
+            fontSize: {
+                // poster-scale fluid display sizes (clamp = accessible 1vw trick)
+                'display': ['clamp(3rem, 9vw, 10rem)', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
+                'display-sm': ['clamp(2rem, 5vw, 5rem)', { lineHeight: '1', letterSpacing: '-0.02em' }],
+                'label': ['0.75rem', { lineHeight: '1.2', letterSpacing: '0.03em' }],
             },
-            animation: {
-                'gradient-xy': 'gradient-xy 15s ease infinite',
-                'float': 'float 6s ease-in-out infinite',
-                'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                'shimmer': 'shimmer 2s linear infinite',
+            letterSpacing: {
+                tightest: '-0.05em',
+                display: '-0.03em',
             },
-            keyframes: {
-                'gradient-xy': {
-                    '0%, 100%': {
-                        'background-size': '400% 400%',
-                        'background-position': 'left center'
-                    },
-                    '50%': {
-                        'background-size': '400% 400%',
-                        'background-position': 'right center'
-                    },
-                },
-                'float': {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-20px)' },
-                },
-                'shimmer': {
-                    'from': { backgroundPosition: '0 0' },
-                    'to': { backgroundPosition: '-200% 0' },
-                },
+            borderRadius: {
+                pill: '6.25rem',
+            },
+            transitionTimingFunction: {
+                'out-expo': 'cubic-bezier(0.22, 1, 0.36, 1)',
             },
         },
     },
