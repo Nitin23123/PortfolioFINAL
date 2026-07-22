@@ -1,37 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { sheetDrainUp } from '../../motion/variants';
+import Loader3DCanvas from './Loader3DCanvas';
 
 /**
  * Scene 00 — "The Count".
  *
  * A black sheet over the film while Tier-0 assets (fonts) genuinely
  * load. The count's progress is real: time carries it to 88, asset
- * completion releases the last twelve. Numbers snap in irregular
- * integer jumps — machines under load don't count smoothly.
- *
- * Plays once per session (the gate lives in App, not here). Exit is
- * the sheet draining upward via AnimatePresence, teaching rule one:
- * black is a substance in this film, not a color.
+ * completion releases the last twelve. Displays a central N [3D Asset] '
+ * composition while cycling 3D objects.
  *
  * @param {object} props
  * @param {() => void} props.onComplete fired after the 100 hold;
  *        the parent flips phase → 'ready' and the drain plays.
  */
 
-/** Minimum time the count must run, even on a warm cache (ms). */
-const MIN_RUNTIME = 1400;
-/** Hard ceiling on waiting for fonts before we ship anyway (ms). */
-const ASSET_TIMEOUT = 3000;
-/** Interval between count jumps (ms). */
-const TICK = 70;
-/** Where the count stalls until assets confirm (percent). */
-const PRE_ASSET_CEILING = 88;
-/** How long the finished count holds before the drain (ms). */
-const HOLD_AT_100 = 200;
+const INITIAL_PAUSE = 3000; // 3 seconds initial pause
+const MIN_RUNTIME = 3200;    // Fast 3.2-second countdown duration from 100 -> 0
+const ASSET_TIMEOUT = 7000;
+const TICK = 30;
+const HOLD_AT_ZERO = 200;
+const TOTAL_3D_OBJECTS = 6;
 
 const S00Loader = ({ onComplete }) => {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(100);
+    const [isStarted, setIsStarted] = useState(false);
     const completedRef = useRef(false);
 
     useEffect(() => {
@@ -39,9 +33,8 @@ const S00Loader = ({ onComplete }) => {
         let assetsReady = false;
         let interval;
         let holdTimer;
+        let startPauseTimer;
 
-        // Tier 0 gate: fonts, with a hard timeout so a stalled CDN
-        // can never hold the film hostage.
         const fontsSettled =
             'fonts' in document ? document.fonts.ready : Promise.resolve();
         const timeout = new Promise((resolve) => setTimeout(resolve, ASSET_TIMEOUT));
@@ -49,75 +42,82 @@ const S00Loader = ({ onComplete }) => {
             assetsReady = true;
         });
 
-        interval = setInterval(() => {
-            setCount((current) => {
-                const elapsed = performance.now() - startedAt;
+        // Pause for 3 seconds before starting the countdown & 3D object cycle
+        startPauseTimer = setTimeout(() => {
+            setIsStarted(true);
+            const countdownStart = performance.now();
 
-                // Time carries the target to the ceiling; assets + minimum
-                // runtime release the last stretch to 100.
-                const timeTarget = Math.min(
-                    PRE_ASSET_CEILING,
-                    Math.round((elapsed / MIN_RUNTIME) * PRE_ASSET_CEILING),
-                );
-                const target =
-                    assetsReady && elapsed >= MIN_RUNTIME ? 100 : timeTarget;
+            interval = setInterval(() => {
+                setCount((current) => {
+                    const elapsed = performance.now() - countdownStart;
 
-                if (current >= 100) return current;
+                    const rawProgress = Math.min(1, elapsed / MIN_RUNTIME);
+                    // Sharp exponential acceleration: fast & snappy transition toward 0
+                    const expProgress = Math.pow(rawProgress, 3.2);
+                    const targetCount = assetsReady
+                        ? Math.max(0, Math.round(100 * (1 - expProgress)))
+                        : Math.max(12, Math.round(100 * (1 - expProgress)));
 
-                // Irregular integer jump toward the target. Snap, no easing.
-                const jump = 2 + Math.floor(Math.random() * 5);
-                const next = Math.min(current + jump, target);
+                    if (current <= 0) return 0;
 
-                if (next >= 100 && !completedRef.current) {
-                    completedRef.current = true;
-                    clearInterval(interval);
-                    holdTimer = setTimeout(onComplete, HOLD_AT_100);
-                }
-                return next;
-            });
-        }, TICK);
+                    const jump = Math.max(1, Math.round((100 - targetCount) / 10));
+                    const next = Math.min(current - 1, Math.max(current - jump, targetCount));
+
+                    if (next <= 0 && !completedRef.current) {
+                        completedRef.current = true;
+                        clearInterval(interval);
+                        holdTimer = setTimeout(onComplete, HOLD_AT_ZERO);
+                    }
+                    return next;
+                });
+            }, TICK);
+        }, INITIAL_PAUSE);
 
         return () => {
-            clearInterval(interval);
-            clearTimeout(holdTimer);
+            clearTimeout(startPauseTimer);
+            if (interval) clearInterval(interval);
+            if (holdTimer) clearTimeout(holdTimer);
         };
     }, [onComplete]);
 
+    const progress = (100 - count) / 100;
+    const activeIndex = Math.floor(progress * TOTAL_3D_OBJECTS * 2.5) % TOTAL_3D_OBJECTS;
+    const formattedCount = String(count).padStart(3, '0');
+
     return (
         <motion.div
-            className="fixed inset-0 z-[9999] bg-ink text-paper flex flex-col justify-between p-6 md:p-10"
+            className="fixed inset-0 z-[9999] bg-ink text-paper flex flex-col justify-between p-6 md:p-10 select-none overflow-hidden"
             variants={sheetDrainUp}
             exit="exit"
             aria-label="Loading"
         >
-            {/* Top rail — Machine voice in the corners */}
-            <div className="flex items-start justify-between font-mono text-xs uppercase tracking-[0.08em]">
-                <span>Nitin&rsquo; — Portfolio</span>
-                <span className="text-meta-dark">( loading )</span>
+            {/* Center Stage — N [3D Object] ' */}
+            <div className="flex-1 flex items-center justify-center relative z-10 my-auto">
+                <div className="flex items-center justify-center font-black uppercase leading-none tracking-tighter text-[18vw] md:text-[12vw] text-paper">
+                    <span>N</span>
+                    <AnimatePresence>
+                        {isStarted && (
+                            <motion.div
+                                key="loader-3d-container"
+                                initial={{ width: 0, opacity: 0, scale: 0 }}
+                                animate={{ width: 'auto', opacity: 1, scale: 1 }}
+                                exit={{ width: 0, opacity: 0, scale: 0 }}
+                                transition={{ type: 'spring', stiffness: 280, damping: 20 }}
+                                className="w-[18vw] h-[18vw] md:w-[12vw] md:h-[12vw] relative flex items-center justify-center shrink-0 mx-[0.5vw]"
+                            >
+                                <Loader3DCanvas activeIndex={activeIndex} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <span>&rsquo;</span>
+                </div>
             </div>
 
-            {/* Bottom block — progress hairline, tagline, the count */}
-            <div>
-                <div
-                    className="w-full h-px bg-white/15 relative overflow-hidden mb-6"
-                    role="progressbar"
-                    aria-valuenow={count}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                >
-                    {/* Width snaps with the count — the bar is Machine, not Paper */}
-                    <div
-                        className="h-full bg-paper absolute left-0 top-0"
-                        style={{ width: `${count}%` }}
-                    />
-                </div>
-
-                <div className="flex items-end justify-between gap-6">
-                    <span className="font-mono text-xs uppercase tracking-[0.08em] text-meta-dark pb-2">
-                        not a style, a perspective
-                    </span>
-                    <span className="font-sans font-black leading-none tracking-display text-[clamp(4rem,12vw,10rem)] tabular-nums select-none">
-                        {count}
+            {/* Bottom block — centered 000 counter */}
+            <div className="relative z-10 pb-4">
+                <div className="flex items-center justify-center">
+                    <span className="font-mono font-bold leading-none tracking-widest text-xl md:text-3xl text-paper/90 tabular-nums">
+                        {formattedCount}
                     </span>
                 </div>
             </div>
@@ -126,3 +126,4 @@ const S00Loader = ({ onComplete }) => {
 };
 
 export default S00Loader;
+

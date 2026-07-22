@@ -16,6 +16,31 @@ import { useCapabilities } from '../../app/providers';
 
 const WORD = ['N', 'I', 'T', 'I', 'N', '’'];
 
+const letterContainer = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.07,
+            delayChildren: 0.2,
+        },
+    },
+};
+
+const letterVariant = {
+    hidden: {
+        y: '105%',
+        opacity: 0,
+    },
+    visible: {
+        y: '0%',
+        opacity: 1,
+        transition: {
+            duration: 0.95,
+            ease: [0.22, 1, 0.36, 1],
+        },
+    },
+};
+
 const Wordmark = () => {
     const { coarsePointer } = useCapabilities();
     const reducedMotion = useReducedMotion();
@@ -78,18 +103,23 @@ const Wordmark = () => {
     const content = WORD.map((char, i) => (
         <span
             key={`${char}-${i}`}
-            ref={(el) => {
-                letterRefs.current[i] = el;
-            }}
-            className="inline-block transition-opacity duration-300"
+            className="inline-block overflow-hidden align-bottom"
         >
-            {char}
+            <motion.span
+                ref={(el) => {
+                    letterRefs.current[i] = el;
+                }}
+                variants={letterVariant}
+                className="inline-block transition-opacity duration-300"
+            >
+                {char}
+            </motion.span>
         </span>
     ));
 
     const className =
         'relative z-10 pointer-events-none text-center font-black uppercase ' +
-        'leading-[0.8] tracking-[-0.03em] text-[26vw] md:text-[28vw] select-none whitespace-nowrap';
+        'leading-[0.8] tracking-[-0.03em] text-[26vw] md:text-[28vw] select-none whitespace-nowrap overflow-hidden';
 
     if (reducedMotion) {
         return <h1 className={className}>{content}</h1>;
@@ -98,7 +128,7 @@ const Wordmark = () => {
     return (
         <motion.h1
             className={className}
-            variants={sceneGesture}
+            variants={letterContainer}
             initial="hidden"
             animate="visible"
         >

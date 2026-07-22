@@ -33,18 +33,13 @@ const detectCapabilities = () => {
     }
 
     let loaderSeen = false;
-    try {
-        loaderSeen = sessionStorage.getItem(LOADER_SESSION_KEY) === '1';
-    } catch {
-        loaderSeen = false;
-    }
 
     return {
         reducedMotion,
         coarsePointer,
         webgl2,
         dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-        loaderSeen,
+        loaderSeen: false,
     };
 };
 

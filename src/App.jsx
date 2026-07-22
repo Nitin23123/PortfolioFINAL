@@ -45,8 +45,8 @@ const useActiveSceneTracking = (enabled) => {
  */
 const Film = () => {
     const phase = useExperience((s) => s.phase);
-    const { loaderSeen, reducedMotion } = useCapabilities();
-    const skipLoader = loaderSeen || reducedMotion;
+    const { reducedMotion } = useCapabilities();
+    const skipLoader = reducedMotion;
 
     useEffect(() => {
         if (skipLoader) experienceActions.ready();
