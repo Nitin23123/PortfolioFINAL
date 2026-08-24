@@ -1,8 +1,9 @@
-import { Suspense, lazy, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Suspense, lazy, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { DUR } from '../../motion/tokens';
 import { settleIn } from '../../motion/variants';
 import { useCapabilities } from '../../app/providers';
+import { experienceActions } from '../../state/experienceStore';
 import Wordmark from './Wordmark';
 
 /**
@@ -28,14 +29,6 @@ const S01Hero = () => {
     const { webgl2, coarsePointer, reducedMotion } = useCapabilities();
     const inkEnabled = webgl2 && !coarsePointer && !reducedMotion;
 
-    const [showInstaPopup, setShowInstaPopup] = useState(false);
-    const popupTimer = useRef(null);
-    const triggerInstaPopup = () => {
-        clearTimeout(popupTimer.current);
-        setShowInstaPopup(true);
-        popupTimer.current = setTimeout(() => setShowInstaPopup(false), 2500);
-    };
-
     return (
         <section
             ref={sectionRef}
@@ -52,7 +45,7 @@ const S01Hero = () => {
                 )}
             </div>
 
-            {/* Top left — tagline + CTA */}
+            {/* Top left — tagline */}
             <motion.div
                 className="relative z-10"
                 variants={settleIn(DUR.plate)}
@@ -63,17 +56,28 @@ const S01Hero = () => {
                     Not a style, a perspective.<br />
                     Because Nitin&rsquo; is Everythin&rsquo;.
                 </p>
-                <a
-                    href="mailto:nitin23123@gmail.com"
-                    className="group mt-6 inline-flex items-center gap-3 bg-ink text-paper rounded-pill px-6 py-3 font-mono text-xs uppercase tracking-[0.08em]"
-                >
-                    let&rsquo;s talk
-                    <span aria-hidden="true" className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1">→</span>
-                </a>
             </motion.div>
 
-            {/* Center — the name */}
-            <Wordmark />
+            {/* Center — the name + HUD button */}
+            <div className="relative z-10 flex flex-col items-center justify-center my-auto">
+                <Wordmark />
+                <motion.button
+                    variants={settleIn(DUR.object, 0.4)}
+                    initial="hidden"
+                    animate="visible"
+                    onClick={experienceActions.toggleTerminal}
+                    className="mt-3 sm:mt-5 md:mt-8 inline-flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#141413] hover:bg-[#1C1B1A] text-[#FAF9F5] border border-[#2E2D2B] hover:border-[#DA7756] shadow-[0_4px_20px_rgba(0,0,0,0.12)] transition-all duration-300 font-mono text-xs cursor-pointer group select-none"
+                    aria-label="Open Developer HUD Terminal"
+                >
+                    <span className="w-2 h-2 rounded-full bg-[#DA7756] animate-pulse" />
+                    <span className="font-semibold uppercase tracking-wider text-[11px] sm:text-xs text-[#FAF9F5] group-hover:text-white">
+                        DEVELOPER HUD
+                    </span>
+                    <span className="text-[10px] text-[#9C9A92] group-hover:text-[#DA7756] bg-[#242321] px-1.5 py-0.5 rounded border border-[#33322E] transition-colors">
+                        ⌘K
+                    </span>
+                </motion.button>
+            </div>
 
             {/* Baseline — descriptor left, socials + CV right */}
             <motion.div
@@ -105,17 +109,6 @@ const S01Hero = () => {
                     >
                         GitHub
                     </a>
-                    <span aria-hidden="true" className="font-normal text-meta">/</span>
-                    <a
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            triggerInstaPopup();
-                        }}
-                        className="hover:opacity-50 transition-opacity duration-300"
-                    >
-                        Instagram
-                    </a>
                     <a
                         href="https://drive.google.com/file/d/1yHU8HvPrOW0-2AGfFsen8m5jeQWBJR0y/view"
                         target="_blank"
@@ -127,31 +120,6 @@ const S01Hero = () => {
                     </a>
                 </div>
             </motion.div>
-
-            {/* The one margin-note joke this scene is allowed */}
-            <AnimatePresence>
-                {showInstaPopup && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 12 }}
-                        transition={{ duration: DUR.small }}
-                        className="absolute bottom-20 md:bottom-24 right-6 md:right-12 z-50 bg-ink text-paper font-mono text-xs rounded-md overflow-hidden max-w-[calc(100vw-4rem)]"
-                    >
-                        <div className="px-4 py-3 flex items-center gap-3">
-                            <span aria-hidden="true">🙃</span>
-                            <span>sorry for being antisocial</span>
-                        </div>
-                        <motion.div
-                            initial={{ scaleX: 1 }}
-                            animate={{ scaleX: 0 }}
-                            transition={{ duration: 2.5, ease: 'linear' }}
-                            style={{ originX: 0 }}
-                            className="h-px bg-paper/60 w-full"
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </section>
     );
 };

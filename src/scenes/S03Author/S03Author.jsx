@@ -2,7 +2,7 @@ import PlateIndex from '../../components/ui/PlateIndex';
 import Reveal from '../../motion/Reveal';
 import { DUR } from '../../motion/tokens';
 import { SITE } from '../../content/site';
-import { STATEMENT, BIO, FACTS, ROLES, INSTRUMENT_GROUPS, AUTHOR_EXIT } from '../../content/roles';
+import { STATEMENT, BIO, FACTS, ROLES, AUTHOR_EXIT } from '../../content/roles';
 
 /**
  * Scene 03 — "The Author".
@@ -103,28 +103,21 @@ const S03Author = () => (
                                 </div>
                             </Reveal>
                         ))}
-
-                        {/* Instruments — the full kit as ledger rows, Machine voice.
-                            Categories in print order: what he writes, what he
-                            builds with, what it runs on, what keeps it honest. */}
-                        {INSTRUMENT_GROUPS.map((group) => (
-                            <Reveal
-                                key={group.label}
-                                as="div"
-                                className="border-t border-black/15 py-5 md:py-6 grid grid-cols-1 md:grid-cols-[minmax(10rem,auto)_1fr] gap-2 md:gap-12"
-                            >
-                                <p className="label-light">{group.label}</p>
-                                <p className="label-light md:text-right text-ink/80">
-                                    {group.items.join(' / ')}
-                                </p>
-                            </Reveal>
-                        ))}
                         <div className="border-t border-black/15" />
                     </div>
 
-                    {/* The handoff — small Voice, mid-sentence into Scene 04 */}
-                    <Reveal as="p" className="mt-16 md:mt-24 text-2xl md:text-4xl font-bold tracking-display">
-                        {AUTHOR_EXIT}
+                    {/* The handoff — into Plate 03 Capabilities */}
+                    <Reveal as="div" className="mt-16 md:mt-20">
+                        <p className="text-2xl md:text-4xl font-bold tracking-display">
+                            {AUTHOR_EXIT}
+                        </p>
+                        <a
+                            href="#capabilities"
+                            className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-meta hover:text-ink transition-colors"
+                        >
+                            <span>Explore full technical matrix</span>
+                            <span aria-hidden="true">↓</span>
+                        </a>
                     </Reveal>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DUR, SETTLE, STAGGER } from '../../motion/tokens';
@@ -5,6 +6,7 @@ import { SCENES } from '../registry';
 import { SITE } from '../../content/site';
 import { useExperience, experienceActions } from '../../state/experienceStore';
 import { useSceneScroll } from '../../app/providers';
+import NpxCardWidget from '../../components/NpxCardWidget';
 
 /**
  * The Intermission — the film's index, reachable from every frame.
@@ -23,6 +25,7 @@ const rowVariants = {
 
 const Intermission = () => {
     const menuOpen = useExperience((s) => s.menuOpen);
+    const terminalOpen = useExperience((s) => s.terminalOpen);
     const activeScene = useExperience((s) => s.activeScene);
     const { scrollTo } = useSceneScroll();
 
@@ -44,17 +47,17 @@ const Intermission = () => {
 
     return (
         <>
-            {/* Fixed toggle — outside the story, always in reach */}
+            {/* Fixed top bar — outside the story, always in reach */}
             <nav className="fixed inset-x-0 top-0 z-50 pointer-events-none mix-blend-difference text-paper">
-                <div className="max-w-[1920px] mx-auto px-6 py-6 md:px-12 md:py-8 flex justify-end">
+                <div className="max-w-[1920px] mx-auto px-4 py-5 sm:px-6 sm:py-6 md:px-12 md:py-8 flex items-center justify-end">
                     <button
                         onClick={experienceActions.toggleMenu}
-                        className="pointer-events-auto font-mono text-xs font-bold uppercase tracking-[0.08em] flex items-center gap-2"
+                        className="pointer-events-auto font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.06em] sm:tracking-[0.08em] flex items-center gap-1.5 sm:gap-2 hover:opacity-70 transition-opacity"
                         aria-label="Toggle menu"
                         aria-expanded={menuOpen}
                     >
                         {menuOpen ? 'close' : 'menu'}
-                        <span aria-hidden="true" className="text-sm leading-none">
+                        <span aria-hidden="true" className="text-xs sm:text-sm leading-none">
                             {menuOpen ? '✕' : '∷'}
                         </span>
                     </button>
@@ -109,6 +112,14 @@ const Intermission = () => {
 
                         {/* Direct lines — every exit a visitor might want, one tap away */}
                         <div className="flex flex-col gap-6" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <NpxCardWidget />
+                                <span className="label-dark flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-go" aria-hidden="true" />
+                                    {SITE.availability}
+                                </span>
+                            </div>
+
                             <div className="border-t border-white/15 pt-6 flex flex-wrap items-center gap-x-8 gap-y-3">
                                 <a href={`mailto:${SITE.email}`}
                                     className="label-dark hover:text-paper transition-colors duration-300 py-1">
@@ -126,10 +137,16 @@ const Intermission = () => {
                                     className="label-dark hover:text-paper transition-colors duration-300 py-1">
                                     Resume ↓
                                 </a>
-                                <span className="label-dark flex items-center gap-2 ml-auto">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-go" aria-hidden="true" />
-                                    {SITE.availability}
-                                </span>
+                                <button
+                                    onClick={() => {
+                                        experienceActions.closeMenu();
+                                        setTimeout(() => experienceActions.openTerminal(), 250);
+                                    }}
+                                    className="label-dark hover:text-paper transition-colors duration-300 py-1 flex items-center gap-1.5 text-[#DA7756]"
+                                >
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#DA7756]" />
+                                    Terminal HUD ( ⌘K )
+                                </button>
                             </div>
                         </div>
                     </motion.div>

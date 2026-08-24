@@ -22,6 +22,7 @@ let state = {
     phase: 'loading',
     activeScene: null,
     menuOpen: false,
+    terminalOpen: false,
 };
 
 const listeners = new Set();
@@ -43,9 +44,12 @@ const subscribe = (fn) => {
 export const experienceActions = {
     ready: () => setState({ phase: 'ready' }),
     setActiveScene: (id) => setState({ activeScene: id }),
-    openMenu: () => setState({ menuOpen: true }),
+    openMenu: () => setState({ menuOpen: true, terminalOpen: false }),
     closeMenu: () => setState({ menuOpen: false }),
-    toggleMenu: () => setState({ menuOpen: !state.menuOpen }),
+    toggleMenu: () => setState({ menuOpen: !state.menuOpen, terminalOpen: false }),
+    openTerminal: () => setState({ terminalOpen: true, menuOpen: false }),
+    closeTerminal: () => setState({ terminalOpen: false }),
+    toggleTerminal: () => setState({ terminalOpen: !state.terminalOpen, menuOpen: false }),
 };
 
 /**

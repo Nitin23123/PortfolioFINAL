@@ -7,9 +7,11 @@ import { SCENES } from './scenes/registry';
 
 import S00Loader from './scenes/S00Loader/S00Loader';
 import Intermission from './scenes/Intermission/Intermission';
+import DeveloperTerminal from './components/DeveloperTerminal';
 import S01Hero from './scenes/S01Hero/S01Hero';
 import S02Evidence from './scenes/S02Evidence/S02Evidence';
 import S03Author from './scenes/S03Author/S03Author';
+import S03BCapabilities from './scenes/S03BCapabilities/S03BCapabilities';
 import S04Invitation from './scenes/S04Invitation/S04Invitation';
 import S05Credits from './scenes/S05Credits/S05Credits';
 
@@ -81,9 +83,11 @@ const Film = () => {
             {phase === 'ready' && (
                 <>
                     <Intermission />
+                    <DeveloperTerminal />
                     <S01Hero />
                     <S02Evidence />
                     <S03Author />
+                    <S03BCapabilities />
                     <S04Invitation />
                     <S05Credits />
                 </>
