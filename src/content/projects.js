@@ -16,6 +16,16 @@ export const PROJECTS = [
         image: '/previews/novusaegis.png',
     },
     {
+        id: 'ghostpatch',
+        title: 'GhostPatch',
+        line: 'Fixes the bug, then proves it.',
+        category: 'AI Software Engineer · Open Source',
+        year: '2026',
+        status: 'OPEN SOURCE',
+        link: 'https://github.com/Nitin23123/GhostPatch',
+        image: '/previews/ghostpatch.png',
+    },
+    {
         id: 'reconpro',
         title: 'ReconPro',
         line: 'Recon without the grunt work.',
