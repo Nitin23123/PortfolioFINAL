@@ -6,6 +6,16 @@
 
 export const PROJECTS = [
     {
+        id: 'aequivia',
+        title: 'Aequivia',
+        line: 'Fixes accessibility in source code, not runtime overlays.',
+        category: 'ADA & WCAG Compliance Platform · Full Stack',
+        year: '2026',
+        status: 'LIVE',
+        link: 'https://home.aequivia.com/',
+        image: '/previews/aequivia.png',
+    },
+    {
         id: 'novusaegis',
         title: 'Novus Aegis AI',
         line: 'Honeypots that outthink the attacker.',

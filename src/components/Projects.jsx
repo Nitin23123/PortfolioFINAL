@@ -1,25 +1,6 @@
 import { motion, useSpring } from 'framer-motion';
 import { useState } from 'react';
-
-// Selected works — one poetic line each, noth.in style
-const projects = [
-    {
-        title: "ReconPro",
-        line: "Recon without the grunt work.",
-        category: "SaaS Landing + Auth API",
-        year: "2026",
-        link: "https://reconpro.info",
-        image: "/previews/reconpro.png",
-    },
-    {
-        title: "DevTrace",
-        line: "A dev's day, traced end to end.",
-        category: "Developer Productivity Dashboard",
-        year: "2025",
-        link: "https://devtracedash.netlify.app",
-        image: "/previews/devTrace.png",
-    },
-];
+import { PROJECTS as projects } from '../content/projects';
 
 const Projects = () => {
     const [hoveredProject, setHoveredProject] = useState(null);
